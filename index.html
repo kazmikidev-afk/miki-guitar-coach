@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>המאמן של מיקי ♫</title>
-<meta name="app-version" content="2.5-2026-09-20">
+<meta name="app-version" content="2.6-2026-09-21">
 <meta name="theme-color" content="#07111f">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -80,8 +80,9 @@ a[href^="https://codesandbox.io/s/"]{display:none!important}
 /* v2.4 tuner + smart chord check */
 .audio-tools{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}.audio-tool{border-color:#3f6c72}.tool-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.permission-note{background:#0a1727;border:1px solid var(--line);border-radius:12px;padding:10px 12px;color:var(--muted);font-size:.86rem;line-height:1.5}.string-picks{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}.string-pick{border:1px solid var(--line);background:#0b192a;color:var(--muted);border-radius:10px;padding:8px 10px;min-width:44px;cursor:pointer}.string-pick.on{background:var(--accent2);border-color:var(--accent2);color:#231600;font-weight:900}.tuner-note{text-align:center;font-size:4.4rem;font-weight:900;line-height:1;margin:14px 0 5px}.tuner-hz{text-align:center;color:var(--muted);min-height:1.4em}.tuner-gauge{position:relative;height:76px;margin:10px 0 4px;overflow:hidden}.tuner-arc{position:absolute;left:8%;right:8%;bottom:-54px;height:112px;border:4px solid #36536f;border-radius:50%}.tuner-zone{position:absolute;left:47%;width:6%;bottom:9px;height:58px;background:#56e39f22;border-radius:8px}.tuner-needle{position:absolute;left:50%;bottom:8px;width:3px;height:58px;background:var(--accent2);transform-origin:50% 100%;transform:rotate(0deg);transition:transform .11s}.tuner-scale{display:flex;justify-content:space-between;color:var(--muted);font-size:.78rem}.tuner-msg{text-align:center;font-weight:900;min-height:1.5em}.tuner-msg.good{color:var(--accent)}.tuner-msg.bad{color:var(--accent2)}.check-target{font-size:2.4rem;font-weight:900;color:var(--accent2);text-align:center;margin:12px 0}.string-row{display:grid;grid-template-columns:46px 1fr auto;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}.string-row:last-child{border:0}.string-state{font-weight:800}.string-state.ok{color:var(--accent)}.string-state.warn{color:var(--accent2)}.check-progress{height:9px;background:#26384c;border-radius:12px;overflow:hidden;margin:12px 0}.check-progress i{display:block;height:100%;width:0;background:var(--accent);transition:.2s}.mic-explain{display:none;margin:10px 0}.mic-explain.show{display:block}.attempt-summary{margin-top:13px;padding:12px;border-radius:12px;background:#081724;border:1px solid #34516b}.attempt-summary h4{margin:0 0 8px;color:var(--accent)}
 @media(max-width:760px){.audio-tools{grid-template-columns:1fr}.audio-tool .primary{min-height:48px}.tuner-note{font-size:3.8rem}.string-row{grid-template-columns:40px 1fr}.string-row>small{grid-column:2}.tool-head{display:block}.tool-head button{width:100%;margin-top:10px}}
-/* v2.5 home-screen install */
-.install-card{background:linear-gradient(145deg,#132036,#102437);border-color:#3f5a7f}.install-card .primary{flex:0 0 auto;padding:11px 18px}.install-steps{margin:6px 0 0;padding-right:20px;line-height:1.7}.install-steps li{margin:9px 0}.install-note{margin:13px 0 0;color:var(--muted);font-size:.87rem;line-height:1.5}
+/* v2.6 home-screen install */
+.install-card{position:relative;background:linear-gradient(145deg,#132036,#102437);border-color:#3f5a7f;padding-inline-start:46px}.install-card .primary{flex:0 0 auto;padding:11px 18px}.install-dismiss{position:absolute;top:8px;left:8px;width:30px;height:30px;border:0;border-radius:50%;background:transparent;color:var(--muted);font-size:1rem;cursor:pointer;display:grid;place-items:center}.install-dismiss:hover{background:#ffffff12;color:var(--text)}.install-dismiss:focus-visible,.install-restore:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}.install-restore-wrap{text-align:center;margin:-9px 0 12px}.install-restore{border:0;background:transparent;color:var(--muted);font:inherit;font-size:.72rem;padding:5px 9px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}.install-restore:hover{color:var(--text)}.install-steps{margin:6px 0 0;padding-right:20px;line-height:1.7}.install-steps li{margin:9px 0}.install-note{margin:13px 0 0;color:var(--muted);font-size:.87rem;line-height:1.5}
+@media(max-width:480px){.install-card{align-items:flex-start;flex-wrap:wrap;padding-inline-start:44px}.install-card .primary{margin-right:auto}.install-dismiss{top:7px;left:7px}}
 </style>
 </head>
 <body>
@@ -92,10 +93,12 @@ a[href^="https://codesandbox.io/s/"]{display:none!important}
   <div class="wake-copy"><span class="wake-icon" aria-hidden="true">☀️</span><div><b id="wakeLabel">השארת מסך דולק</b><span class="wake-status" id="wakeStatus" aria-live="polite">מופעל - המסך יישאר דולק בזמן התרגול</span></div></div>
   <button class="wake-toggle" id="wakeToggle" type="button" role="switch" aria-checked="true" aria-label="השארת מסך דולק"><i aria-hidden="true"></i></button>
 </section>
-<section class="wake-card install-card" id="installCard" hidden>
+<section class="wake-card install-card" id="installCard" aria-labelledby="installLabel" hidden>
+  <button class="install-dismiss" id="installDismiss" type="button" aria-label="הסתרת כרטיס ההתקנה" title="הסתרה">✕</button>
   <div class="wake-copy"><span class="wake-icon" aria-hidden="true">📲</span><div><b id="installLabel">התקנה במסך הבית</b><span class="wake-status">אייקון אמיתי על הטלפון - נפתח ישר למאמן, במסך מלא ובלי שורת כתובת</span></div></div>
   <button class="primary" id="installBtn" type="button">הוספה</button>
 </section>
+<div class="install-restore-wrap" id="installRestoreWrap" hidden><button class="install-restore" id="installRestore" type="button">הצגת אפשרות ההתקנה</button></div>
 <div id="secureBanner" hidden style="background:#3d2430;border:1px solid var(--danger);border-radius:14px;padding:14px 16px;margin:0 0 16px;font-size:15px;line-height:1.55">
 <b style="color:var(--danger)">🎙 המיקרופון לא יכול לפעול מהקובץ שהורד</b><br>
 כשפותחים את האפליקציה כקובץ מהמכשיר (content:// או file://), הדפדפן חוסם לגמרי את הגישה למיקרופון — אין מה לאשר בסמל המנעול.<br>
@@ -396,10 +399,14 @@ document.getElementById('strumPlayBtn').onclick=async()=>{if(strumPlaying){stopS
 
 renderTransitions();renderPatterns();startTransLoop();
 ensureToday();renderChords();renderSongs();renderLessons();renderVideos();renderSteps();renderProgress();renderStats();
-/* === v2.5 home-screen install === */
+/* === v2.6 home-screen install === */
 let deferredInstallPrompt=null;
+const INSTALL_CARD_DISMISSED_KEY='installCardDismissed';
 const installCard=document.getElementById('installCard');
 const installBtn=document.getElementById('installBtn');
+const installDismiss=document.getElementById('installDismiss');
+const installRestore=document.getElementById('installRestore');
+const installRestoreWrap=document.getElementById('installRestoreWrap');
 function isStandaloneMode(){try{return window.matchMedia('(display-mode: standalone)').matches||window.matchMedia('(display-mode: fullscreen)').matches||('standalone' in navigator&&navigator.standalone===true)}catch(e){return false}}
 function installPlatform(){const ua=navigator.userAgent||'';return{ios:/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),android:/Android/i.test(ua)}}
 function installHelpHTML(){const p=installPlatform();
@@ -407,12 +414,20 @@ function installHelpHTML(){const p=installPlatform();
  if(p.android)return'<h3 style="margin-top:0">באנדרואיד - דרך Chrome</h3><ol class="install-steps"><li>הקש על תפריט <b>⋮</b> בפינה העליונה של הדפדפן.</li><li>בחר <b>״הוסף למסך הבית״</b> או <b>״התקן אפליקציה״</b> (Add to Home screen / Install app).</li><li>אשר בהודעה שקופצת.</li></ol><p class="install-note">יופיע אייקון ״המאמן של מיקי״ על מסך הבית - פתיחה ישירה למאמן, בלי לחפש קישורים בוואטסאפ.</p>';
  return'<h3 style="margin-top:0">הוספה למסך הבית</h3><ol class="install-steps"><li><b>אייפון:</b> פתח ב-Safari ← כפתור השיתוף ← ״הוסף למסך הבית״.</li><li><b>אנדרואיד:</b> Chrome ← תפריט ⋮ ← ״הוסף למסך הבית״ או ״התקן אפליקציה״.</li><li><b>מחשב:</b> סמל ההתקנה בשורת הכתובת, או מתפריט הדפדפן.</li></ol><p class="install-note">אחרי ההתקנה האפליקציה נפתחת מאייקון משלה, במסך מלא.</p>'}
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e});
-window.addEventListener('appinstalled',()=>{installCard.hidden=true});
+function renderInstallUI(){
+ const installed=isStandaloneMode();
+ const dismissed=localStorage.getItem(INSTALL_CARD_DISMISSED_KEY)==='true';
+ installCard.hidden=installed||dismissed;
+ installRestoreWrap.hidden=installed||!dismissed;
+}
+installDismiss.addEventListener('click',()=>{localStorage.setItem(INSTALL_CARD_DISMISSED_KEY,'true');renderInstallUI()});
+installRestore.addEventListener('click',()=>{localStorage.removeItem(INSTALL_CARD_DISMISSED_KEY);renderInstallUI();installCard.scrollIntoView({behavior:'smooth',block:'nearest'});installBtn.focus()});
+window.addEventListener('appinstalled',()=>{installCard.hidden=true;installRestoreWrap.hidden=true});
 installBtn.onclick=async()=>{
- if(deferredInstallPrompt){try{deferredInstallPrompt.prompt();const r=await deferredInstallPrompt.userChoice;if(r&&r.outcome==='accepted')installCard.hidden=true;deferredInstallPrompt=null;return}catch(e){}}
+ if(deferredInstallPrompt){try{deferredInstallPrompt.prompt();const r=await deferredInstallPrompt.userChoice;if(r&&r.outcome==='accepted'){installCard.hidden=true;installRestoreWrap.hidden=true}deferredInstallPrompt=null;return}catch(e){}}
  document.getElementById('installHelpBody').innerHTML=installHelpHTML();
  document.getElementById('installModal').classList.add('show')};
-if(!isStandaloneMode())installCard.hidden=false;
+renderInstallUI();
 
 window.__coachTest={buildDailyPlan,supportiveReport,levelInfo,focusDrills};
 </script>
