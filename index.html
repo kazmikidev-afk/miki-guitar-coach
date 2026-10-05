@@ -2300,28 +2300,36 @@ function v46Next(fn,ms){let now=performance.now(),target=v46Cur+ms;if(target<now
 function v46MReset(){v46MCur=performance.now()}
 function v46NextM(fn,ms){let now=performance.now(),target=v46MCur+ms;if(target<now-250)target=now;return setTimeout(()=>{v46MCur=target;fn()},Math.max(0,target-now))}
 const v46Cache=new Map();
-function v46Synth(freq,sr){
- const key=freq.toFixed(2)+'@'+sr;if(v46Cache.has(key))return v46Cache.get(key);
- const t=Math.max(0,Math.min(1,(220-freq)/140)),B=0.18+0.3*t,decay=0.9972+0.0022*t,sm=0.2+0.55*t;
- const len=Math.floor(sr*V46_DUR),y=new Float32Array(len),P=sr/freq,D=P-B,N=Math.floor(D),fr=D-N;
- let seed=(Math.round(freq*100)*2654435761)>>>0||1;const rnd=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/2147483648-1};
- let prev=0;for(let i=0;i<=N&&i<len;i++){prev=prev*sm+rnd()*(1-sm);y[i]=prev}
- if(t>0.3){let p2=0;for(let i=0;i<=N;i++){p2=p2*0.55+y[i]*0.45;y[i]=p2}}
- const pos=Math.max(1,Math.floor(N*0.17));for(let i=N;i>=pos;i--)y[i]-=y[i-pos]*0.6;
- let mean=0;for(let i=0;i<=N;i++)mean+=y[i];mean/=N+1;for(let i=0;i<=N;i++)y[i]-=mean;
- let px=0;
- for(let n=N+1;n<len;n++){const x=(1-fr)*y[n-N]+fr*y[n-N-1];y[n]=decay*((1-B)*x+B*px);px=x}
- const att=Math.floor(sr*(0.002+0.008*t));for(let i=0;i<att&&i<len;i++)y[i]*=0.5-0.5*Math.cos(Math.PI*i/att);
- let peak=0;for(let i=0;i<len;i++){const a=Math.abs(y[i]);if(a>peak)peak=a}
+function v46Synth(freq,sr,variant){
+ variant=variant|0;const key=freq.toFixed(2)+'@'+sr+'v'+variant;if(v46Cache.has(key))return v46Cache.get(key);
+ const t=Math.max(0,Math.min(1,(220-freq)/140)),len=Math.floor(sr*V46_DUR),y=new Float32Array(len);
+ let seed=((Math.round(freq*100)*2654435761)^(variant*40503+7))>>>0||1;const rnd=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296};
+ const nMax=Math.max(3,Math.min(26,Math.floor(Math.min(5200,sr*0.42)/freq))),p=0.14+0.05*t+0.01*variant,tau1=0.5+0.9*t;
+ const parts=[];
+ for(let n=1;n<=nMax;n++){
+  let a=Math.abs(Math.sin(n*Math.PI*p))/Math.pow(n,1.1+0.6*(1-t));
+  if(t>0.4&&n>=2&&n<=5)a*=1+1.6*t;
+  a*=1+(rnd()-0.5)*0.16;
+  const tau=tau1/(1+0.32*Math.pow(n-1,1.1)*(1+0.5*(1-t)));
+  const fn=n*freq*Math.sqrt(1+0.00005*n*n)*(1+(rnd()-0.5)*0.0004);
+  parts.push([a,tau,fn,rnd()*0.8]);
+  if(n<=3)parts.push([a*0.45,tau*0.9,fn*(1+0.0006+rnd()*0.0006),rnd()*6.28]);
+ }
+ for(const [a,tau,fn,ph] of parts){const w=2*Math.PI*fn/sr,cw=Math.cos(w),sw=Math.sin(w),ed=Math.exp(-1/(sr*tau));let s=Math.sin(ph),c=Math.cos(ph),e=a;
+  for(let i=0;i<len&&e>1e-4*a;i++){y[i]+=e*s;const s2=s*cw+c*sw;c=c*cw-s*sw;s=s2;e*=ed}}
+ if(t<0.5){let nz=0;const L=Math.floor(sr*0.007);for(let i=0;i<L&&i<len;i++){nz=nz*0.6+(rnd()-0.5)*0.4;y[i]+=nz*0.35*(1-i/L)*(1-t*1.5)}}
+ const att=Math.floor(sr*(0.002+0.006*t));for(let i=0;i<att&&i<len;i++)y[i]*=0.5-0.5*Math.cos(Math.PI*i/att);
+ let peak=0;for(let i=0;i<len;i++){const q=Math.abs(y[i]);if(q>peak)peak=q}
  const k=peak>0?0.9/peak:1,fade=Math.floor(sr*0.3);
  for(let i=0;i<len;i++){let g=k;if(i>len-fade)g*=(len-i)/fade;y[i]*=g}
  v46Cache.set(key,y);return y}
-function v46Buf(ctx,freq){const y=v46Synth(freq,ctx.sampleRate),key='b'+freq.toFixed(2)+'@'+ctx.sampleRate;if(v46Cache.has(key))return v46Cache.get(key);const b=ctx.createBuffer(1,y.length,ctx.sampleRate);b.copyToChannel(y,0);v46Cache.set(key,b);return b}
-function v46Bus(ctx){if(ctx.__v46)return ctx.__v46;const master=ctx.createGain(),hp=ctx.createBiquadFilter(),shelf=ctx.createBiquadFilter(),sat=ctx.createWaveShaper(),lp=ctx.createBiquadFilter(),comp=ctx.createDynamicsCompressor(),an=ctx.createAnalyser();
- hp.type='highpass';hp.frequency.value=150;hp.Q.value=0.7;shelf.type='highshelf';shelf.frequency.value=2200;shelf.gain.value=5;
- const c=new Float32Array(1024);for(let i=0;i<1024;i++){const x=i/511.5-1;c[i]=Math.tanh(2.4*x)/Math.tanh(2.4)}sat.curve=c;sat.oversample='2x';
- lp.type='lowpass';lp.frequency.value=7500;lp.Q.value=0.5;comp.threshold.value=-9;comp.knee.value=6;comp.ratio.value=12;comp.attack.value=0.003;comp.release.value=0.12;an.fftSize=1024;
- master.connect(hp);hp.connect(shelf);shelf.connect(sat);sat.connect(lp);lp.connect(comp);comp.connect(ctx.destination);comp.connect(an);const low=ctx.createGain(),llp=ctx.createBiquadFilter(),lbody=ctx.createBiquadFilter();llp.type='lowpass';llp.frequency.value=1100;llp.Q.value=0.5;lbody.type='peaking';lbody.frequency.value=130;lbody.gain.value=2;lbody.Q.value=0.8;low.connect(llp);llp.connect(lbody);lbody.connect(comp);return ctx.__v46={master,low,an}}
+let v46VarN=0;
+function v46Buf(ctx,freq,variant){variant=variant|0;const k0='b'+freq.toFixed(2)+'@'+ctx.sampleRate+'v';let key=k0+variant;if(!v46Cache.has(key)&&v46Cache.has(k0+(1-variant)))key=k0+(1-variant);else if(!v46Cache.has(key)){const y=v46Synth(freq,ctx.sampleRate,variant),b=ctx.createBuffer(1,y.length,ctx.sampleRate);b.copyToChannel(y,0);v46Cache.set(key,b)}return v46Cache.get(key)}
+function v46Bus(ctx){if(ctx.__v46)return ctx.__v46;const master=ctx.createGain(),hp=ctx.createBiquadFilter(),shelf=ctx.createBiquadFilter(),lp=ctx.createBiquadFilter(),comp=ctx.createDynamicsCompressor(),an=ctx.createAnalyser();
+ hp.type='highpass';hp.frequency.value=110;hp.Q.value=0.6;shelf.type='highshelf';shelf.frequency.value=2500;shelf.gain.value=1;lp.type='lowpass';lp.frequency.value=5500;lp.Q.value=0.5;
+ comp.threshold.value=-10;comp.knee.value=8;comp.ratio.value=10;comp.attack.value=0.004;comp.release.value=0.15;an.fftSize=1024;
+ master.connect(hp);hp.connect(shelf);shelf.connect(lp);lp.connect(comp);comp.connect(ctx.destination);comp.connect(an);
+ const low=ctx.createGain(),llp=ctx.createBiquadFilter(),lhp=ctx.createBiquadFilter();lhp.type='highpass';lhp.frequency.value=55;llp.type='lowpass';llp.frequency.value=1400;llp.Q.value=0.5;low.connect(lhp);lhp.connect(llp);llp.connect(comp);return ctx.__v46={master,low,an}}
 function v46Freq(string,fret){return V46_OPEN[6-string]*Math.pow(2,fret/12)}
 function v46Notes(p,slot,ch){
  const mark=p.slots[slot],c=chords[ch];if(!c||!mark||mark==='·')return {notes:[],strum:false};
@@ -2336,9 +2344,9 @@ function v46Strike(ctx,p,slot,ch,when,slotSec,vol){
  const bus=v46Bus(ctx);bus.master.gain.value=Math.max(0,Math.min(1,vol/100))*0.8;bus.low.gain.value=Math.max(0,Math.min(1,vol/100))*1.0;
  const now=ctx.currentTime;v46Groups=v46Groups.filter(g=>g.end>now);
  if(r.strum||slot===0){for(const g of v46Groups){if(g.start<when){g.grp.gain.cancelScheduledValues(0);g.grp.gain.setValueAtTime(1,Math.max(now,when-0.004));g.grp.gain.linearRampToValueAtTime(0,when+0.035);g.end=Math.min(g.end,when+0.05)}}}
- const grp=ctx.createGain(),grpL=ctx.createGain();grp.connect(bus.master);grpL.connect(bus.low);v46Groups.push({grp,start:when,end:when+V46_DUR+0.1});v46Groups.push({grp:grpL,start:when,end:when+V46_DUR+0.1});
+ v46VarN++;const grp=ctx.createGain(),grpL=ctx.createGain();grp.connect(bus.master);grpL.connect(bus.low);v46Groups.push({grp,start:when,end:when+V46_DUR+0.1});v46Groups.push({grp:grpL,start:when,end:when+V46_DUR+0.1});
  const spread=r.strum?Math.min(0.016,slotSec*0.12):0;
- for(const n of r.notes){const src=ctx.createBufferSource(),g=ctx.createGain();const fq=v46Freq(n.string,n.fret);src.buffer=v46Buf(ctx,fq);g.gain.value=n.gain;src.connect(g);g.connect(fq<190?grpL:grp);const t=when+n.i*spread;src.start(t);src.stop(t+V46_DUR)}
+ for(const n of r.notes){const src=ctx.createBufferSource(),g=ctx.createGain();const fq=v46Freq(n.string,n.fret);src.buffer=v46Buf(ctx,fq,(v46VarN+n.i)&1);g.gain.value=n.gain;src.connect(g);g.connect(fq<190?grpL:grp);const t=when+n.i*spread;src.start(t);src.stop(t+V46_DUR)}
  return r.notes.length}
 function v46Silence(){const ctx=audioCtx;const gs=v46Groups;v46Groups=[];if(!ctx)return;for(const g of gs){try{g.grp.gain.cancelScheduledValues(0);g.grp.gain.setTargetAtTime(0,ctx.currentTime,0.012);setTimeout(()=>{try{g.grp.disconnect()}catch(e){}},200)}catch(e){}}}
 function v46Ctx(){let C=window.AudioContext||window.webkitAudioContext;if(!C)return null;if(!audioCtx)audioCtx=new C();if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx}
@@ -2359,7 +2367,7 @@ let v46LastSay=0;
 function v46Health(ctx){if(ctx.state!=='running'){ctx.resume();v46Say('הדפדפן חוסם את השמע ('+ctx.state+'). לחץ "בדיקת צליל", או פתח את האתר ב-Chrome',true);return}const n=performance.now();if(n-v46LastSay<1500)return;v46LastSay=n;setTimeout(()=>{if(!v41Playing)return;const pk=v46Peak();if(pk>0.01)v46Say('🔊 הגיטרה מנגנת. אם אין צליל בטלפון: בדוק עוצמת מדיה ושהמכשיר לא במצב שקט',false);else v46Say('השמע פעיל אבל לא יוצא אות. לחץ "בדיקת צליל"',true)},120)}
 function v46Test(){v46Say('בודק...',false);v46Unlock().then(ok=>{const ctx=audioCtx;if(!ok||!ctx){v46Say('הדפדפן לא מאפשר שמע ('+(ctx?ctx.state:'אין AudioContext')+'). נסה לפתוח את האתר ב-Chrome',true);return}const pat=v40Patterns[1];v46Groups=[];const t=ctx.currentTime+0.08;v46Strike(ctx,pat,0,'Em',t,0.5,v46s.vol);v46Strike(ctx,pat,0,'D',t+0.7,0.5,v46s.vol);setTimeout(()=>{const pk=v46Peak();v46Say(pk>0.01?'נוגנו שני אקורדים (Em, D). אם לא שמעת: הגבר עוצמת מדיה בטלפון, בטל מצב שקט, או נסה Chrome':'השמע פעיל אבל לא יוצא אות מהאפליקציה. דווח לי',pk<=0.01)},350)})}
 
-function v46Prewarm(){try{const ctx=v46Ctx();if(!ctx||!v41Session)return;const s=songs[v41Session.songIndex],names=new Set();(s.sections||[{bars:s.ch}]).forEach(x=>x.bars.forEach(c=>names.add(c)));const jobs=[];names.forEach(c=>{const f=chords[c]&&chords[c].frets;if(f)f.forEach((fr,i)=>{if(fr>=0)jobs.push(v46Freq(6-i,fr))})});const sr=ctx.sampleRate;(function next(){const f=jobs.shift();if(f===undefined)return;v46Buf(ctx,f);setTimeout(next,0)})()}catch(x){}}
+function v46Prewarm(){try{const ctx=v46Ctx();if(!ctx||!v41Session)return;const s=songs[v41Session.songIndex],names=new Set();(s.sections||[{bars:s.ch}]).forEach(x=>x.bars.forEach(c=>names.add(c)));const jobs=[];names.forEach(c=>{const f=chords[c]&&chords[c].frets;if(f)f.forEach((fr,i)=>{if(fr>=0){jobs.push({f:v46Freq(6-i,fr),v:0})}})});jobs.slice().forEach(j=>jobs.push({f:j.f,v:1}));const sr=ctx.sampleRate;(function next(){const f=jobs.shift();if(f===undefined)return;v46Buf(ctx,f.f,f.v);setTimeout(next,0)})()}catch(x){}}
 (function(){
  const row=document.createElement('div');row.className='v46-row';
  row.innerHTML='<div class="v46-line"><label><input type="checkbox" id="v46Guitar"> 🎸 גיטרה</label><label><input type="checkbox" id="v46Click"> 🔔 קליק</label><label class="v46-vol">עוצמה <input type="range" id="v46Vol" min="10" max="100" step="5"></label></div><button class="secondary" id="v46Demo">🎸 שמע איך זה נשמע</button><button class="secondary" id="v46Test">🔊 בדיקת צליל</button><small id="v46Status"></small><small>הדגמת העיבוד של האפליקציה (גיטרה מסונתזת), לא ההקלטה המקורית. הגיטרה מתחילה רק אחרי ספירת ההכנה.</small>';
