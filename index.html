@@ -2385,5 +2385,75 @@ const v46StopOld=v41Stop;v41Stop=function(){if(!v46KeepRing)v46Silence();v46Keep
 const v46StartOld=v41Start;v41Start=function(){if(!v41Playing){v46Unlock();v46Prewarm()}v46StartOld()};v41('v41Play').onclick=v41Start;
 function v46Sync(){const r=document.querySelector('.v46-row');if(!r||!v41Session)return;const hide=!!(v41Session.timed||v41Session.exercise==='hand');r.querySelectorAll('#v46Guitar,#v46Vol,#v46Demo,#v46Test,#v46Status,.v46-row>small').forEach(e=>{const t=e.closest('label')||e;t.hidden=hide});const sm=r.querySelector(':scope>small:not(#v46Status)');if(sm)sm.hidden=hide}
 const v46DrawOld=v41Draw;v41Draw=function(s){v46DrawOld(s);v46Sync()};
+/* v4.7 progress-based daily workout */
+(function(){
+ const SN='אצלך בעולם';
+ const P=[
+  {id:'sh1',g:'צורות',t:'צורות · Em ו-D',d:'6 דקות · בנה כל צורה לפי התרשים, פרוט מיתר-מיתר, שחרר ובנה שוב. חמש פעמים לכל אקורד',st:0,sec:0},
+  {id:'sh2',g:'צורות',t:'צורות · C ו-Am',d:'6 דקות · אותו דבר: בנה, פרוט מיתר-מיתר, שחרר, בנה שוב. בלי למהר',st:0,sec:0},
+  {id:'tr1',g:'מעברים',t:'מעבר · Em ⇄ D',d:'5 דקות · תיבה לכל אקורד, לאט. האצבעות זזות כגוש ובזמן',st:0,sec:0},
+  {id:'tr2',g:'מעברים',t:'מעבר · D ⇄ C',d:'5 דקות · לאט, תיבה אחת לכל אקורד. אל תעצור את הספירה',st:0,sec:0},
+  {id:'tr3',g:'מעברים',t:'מעבר · C ⇄ Am ואז Am → Em',d:'6 דקות · סגור את מעגל ארבעת האקורדים: Em, D, C, Am וחזרה',st:0,sec:0},
+  {id:'rh1',g:'יד ימין',t:'חלק 1 · שקט · פריטת אצבעות',d:'6 דקות · אגודל על הבס ואז האצבעות בסדר שמוצג. לאט, יד רפויה',st:1,sec:0},
+  {id:'rh2',g:'יד ימין',t:'חלק 2 · חזק · מברשת',d:'6 דקות · ספור 1-2-3, 4-5-6. היד ממשיכה גם באוויר',st:1,sec:1},
+  {id:'rh3',g:'יד ימין',t:'חלק 3 · שקט · פריטת אצבעות',d:'5 דקות · אותה פריטה כמו חלק 1, עכשיו עם מעבר האקורדים',st:1,sec:2},
+  {id:'rh4',g:'יד ימין',t:'חלק 4 · חזק · מברשת',d:'5 דקות · אותה מברשת כמו חלק 2, עם דגש עדין על 1 ועל 4',st:1,sec:3},
+  {id:'rh5',g:'יד ימין',t:'חלק 5 · שקט · פריטת אצבעות',d:'5 דקות · פריטה שקטה ורצופה, בלי עצירה במעבר',st:1,sec:4},
+  {id:'rh6',g:'יד ימין',t:'חלק 6 · חזק (הסוף) · מברשת',d:'6 דקות · ארבעה סבבים. שמור על אותה עוצמה עד הסוף',st:1,sec:5},
+  {id:'cn1',g:'מחברים',t:'חיבור · חלק 1 ואז חלק 2',d:'6 דקות · משקט לחזק בלי לעצור. הפעל חלק אחרי חלק',st:3,sec:0},
+  {id:'cn2',g:'מחברים',t:'חיבור · חלק 3 ואז חלק 4',d:'6 דקות · שוב משקט לחזק. נסה לא להסתכל על היד',st:3,sec:2},
+  {id:'cn3',g:'מחברים',t:'חיבור · חלק 5 ואז חלק 6',d:'6 דקות · מהחלק השקט עד הסוף החזק',st:3,sec:4},
+  {id:'fu1',g:'כל השיר',t:'כל השיר · לאט, ברצף',d:'8 דקות · כל 56 התיבות בלי לעצור. אם טעית, המשך עם הספירה',st:3,sec:0},
+  {id:'fu2',g:'כל השיר',t:'כל השיר · עם הגיטרה המדגימה',d:'8 דקות · לחץ "שמע איך זה נשמע", הקשב, ואז נגן יחד איתה. הגיטרה היא עיבוד מסונתז, לא ההקלטה המקורית',st:3,sec:0}
+ ];
+ const byId=Object.fromEntries(P.map(x=>[x.id,x]));
+ state.songPath=state.songPath&&Array.isArray(state.songPath.done)?state.songPath:{done:[]};
+ state.altCount=state.altCount||{};
+ const isDone=id=>state.songPath.done.includes(id);
+ const unfinished=()=>P.filter(x=>!isDone(x.id));
+ const doneList=()=>P.filter(x=>isDone(x.id));
+ function pickMain(key,alt,skipFirst){
+  let un=unfinished(),dn=doneList();if(skipFirst)un=un.slice(1);
+  const seq=[];const n=Math.max(un.length,dn.length);
+  for(let i=0;i<n;i++){if(i<un.length)seq.push({s:un[i],review:false});const j=dn.length-1-i;if(j>=0)seq.push({s:dn[j],review:true})}
+  if(!seq.length)return {s:P[P.length-1],review:true,none:true};
+  return seq[alt%seq.length];
+ }
+ const oldBuild=buildDailyPlan;
+ buildDailyPlan=function(key=localDay(),preview=false,_x){
+  if(preview){const f0=unfinished()[0];if(f0){state.songPath.done.push(f0.id);try{return buildDailyPlan(key,false,1)}finally{state.songPath.done.pop()}}}
+  const lv=levelInfo(),alt=(preview||_x)?0:(state.altCount[key]||0),pk=pickMain(key,alt,false);
+  const m=pk.s,dn=doneList().filter(x=>x.id!==m.id),dayN=Math.abs(dayNumber(key));
+  const warm=dn.length?dn[(dayN)%dn.length]:null;
+  const f=latestFocus();
+  const items=[];
+  items.push(warm?{kind:'חימום',title:'חזרה · '+warm.t,detail:'3 דקות · לאט וברור, כדי להרגיש שזה נשאר ביד',mode:null,stepId:warm.id,adaptive:false}:{kind:'חימום',title:'חימום · מיתרים פתוחים',detail:'3 דקות · פריטות קטנות ואחידות, יד רפויה',mode:null,adaptive:false});
+  items.push({kind:pk.review?'חזרה':'צעד חדש',title:m.t,detail:m.d,mode:null,stepId:m.id,review:pk.review,adaptive:false});
+  const un2=unfinished().filter(x=>x.id!==m.id);
+  if(f){const d=focusDrills[f.type];items.push({kind:'לפי ההקלטה',title:d.title,detail:d.detail(f.bpm||55),mode:d.mode,adaptive:true})}
+  else if(un2.length)items.push({kind:'מה הלאה',title:un2[0].t,detail:'להצצה בלבד, אם נשאר כוח. זה הצעד הבא אחרי היום',mode:null,stepId:un2[0].id,adaptive:false,peek:true});
+  else items.push({kind:'חזרה',title:'חזרה על חלק שאהבת',detail:'4 דקות · בחר חלק ונגן אותו נקי פעמיים',mode:null,adaptive:false});
+  const k=doneList().length;
+  items.push({kind:'סוף',title:k>=8?'נגן ברצף מה שכבר למדת':'נגן את הצורות ברצף',detail:k>=8?'3 דקות · חבר שני חלקים שלמדת, בלי לעצור':'3 דקות · Em, D, C, Am – תיבה לכל אקורד, לאט',mode:null,adaptive:false});
+  const tot=P.length,dc=doneList().length,left=unfinished().length;
+  return {v47:1,date:key,stepId:m.id,review:!!pk.review,title:pk.review?'חוזרים על מה שלמדת':(m.g+' · '+SN),level:lv.name,items,adaptive:!!f,
+   reason:left?`המסלול של ${SN}: ${dc} מתוך ${tot} צעדים הושלמו. היום: ${m.t}.`:`סיימת את כל מסלול ${SN}. עכשיו חוזרים ומשפרים.`};
+ };
+ const oldEnsure=ensureToday;
+ ensureToday=function(){let p=oldEnsure(),key=localDay();if(!p||!p.v47){state.dailyPlans[key]=p=buildDailyPlan(key);save()}return p};
+ const oldRender=renderSteps;
+ renderSteps=function(){oldRender();rotationPill.textContent=(ensureToday().adaptive?'מותאם להקלטה · ':'')+'מסלול '+doneList().length+'/'+P.length;draw()};
+ function openStep(st){go('songs');const sel=v3('v3Song');if(sel.value!==String(v43SongIndex))sel.value=String(v43SongIndex);v3SongSection=st.sec;v39Stage=st.st;v3SongRender();v39Render();setTimeout(()=>{(document.getElementById('v39Instruction')||sel).scrollIntoView({block:'center',behavior:'smooth'})},50)}
+ startDailyPractice=function(){const p=ensureToday(),st=byId[p.stepId];if(st)openStep(st)};
+ window.v47Finish=function(){const p=ensureToday();if(p.review||!byId[p.stepId])return;const key=localDay();if(!isDone(p.stepId))state.songPath.done.push(p.stepId);state.history.unshift({date:new Date().toLocaleDateString('he-IL'),text:'הושלם צעד: '+byId[p.stepId].t});state.history=state.history.slice(0,8);state.altCount[key]=0;state.done=[];state.dailyPlans[key]=buildDailyPlan(key);save();renderSteps();renderStats()};
+ window.v47Other=function(){const key=localDay();state.altCount[key]=(state.altCount[key]||0)+1;state.done=[];state.dailyPlans[key]=buildDailyPlan(key);save();renderSteps()};
+ const card=document.querySelector('.card.today'),host=document.createElement('div');host.className='v47-row';
+ host.innerHTML='<button class="primary" id="v47Finish" onclick="v47Finish()">סיימתי את הצעד – קדימה ✓</button><button class="secondary" id="v47Other" onclick="v47Other()">תן אימון אחר</button><p class="v47-path muted" id="v47Path"></p>';
+ card.append(host);
+ const css=document.createElement('style');css.textContent='.v47-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.v47-row button{flex:1 1 140px;min-height:44px}.v47-path{flex:1 1 100%;margin:4px 0 0;font-size:.85rem}.step-peek{opacity:.75}';document.head.append(css);
+ function draw(){const p=ensureToday();const fb=document.getElementById('v47Finish');fb.hidden=!!p.review;const left=unfinished().length;document.getElementById('v47Path').textContent=left?('המסלול: '+doneList().length+' מתוך '+P.length+' צעדים. "תן אימון אחר" נותן צעד אחר או חזרה להיום.'):'המסלול הושלם. "תן אימון אחר" מחליף את החזרה של היום.'}
+ renderAdaptive=(function(o){return function(){o();const pv=buildDailyPlan(nextDayKey(),true);tomorrowPreview.innerHTML='<ul class="tomorrow-list">'+pv.items.map(x=>`<li><b>${x.kind}:</b> ${x.title}</li>`).join('')+'</ul>'}})(renderAdaptive);
+ renderSteps();
+})();
 </script>
 </body></html>
