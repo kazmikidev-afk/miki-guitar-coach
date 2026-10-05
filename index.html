@@ -118,7 +118,7 @@ details.aug-insight summary:focus-visible{outline:3px solid var(--accent2);outli
 </head>
 <body>
 <div class="app">
-<header class="hero"><div class="brand"><h1>המאמן של מיקי ♫ <span class="pill" style="vertical-align:middle">v4.4</span></h1><p>15 דקות ביום. קודם קצב יציב, אחר כך מהירות.</p></div><div class="streak" id="streak">רצף · יום 1</div></header>
+<header class="hero"><div class="brand"><h1>המאמן של מיקי ♫ <span class="pill" style="vertical-align:middle">v4.5</span></h1><p>15 דקות ביום. קודם קצב יציב, אחר כך מהירות.</p></div><div class="streak" id="streak">רצף · יום 1</div></header>
 
 <section class="wake-card" id="wakeCard" aria-labelledby="wakeLabel">
   <div class="wake-copy"><span class="wake-icon" aria-hidden="true">☀️</span><div><b id="wakeLabel">השארת מסך דולק</b><span class="wake-status" id="wakeStatus" aria-live="polite">מופעל - המסך יישאר דולק בזמן התרגול</span></div></div>
@@ -2280,6 +2280,14 @@ const v43CardOld=renderSongs;renderSongs=function(){v43CardOld();let card=songGr
 let s=document.querySelector('.v41-settings');if(s)s.insertAdjacentHTML('afterend',E.replace(' open',''));
 let g=document.querySelector('.v43-guide');if(g)g.querySelector('p').insertAdjacentHTML('afterend',E);
 let sel=document.querySelectorAll('#songStrum');sel.forEach(x=>{let l=x.closest('label');if(l&&!document.querySelector('.v44-songexp')){let d=document.createElement('div');d.className='v44-songexp';d.innerHTML=E.replace(' open','');l.closest('div,section,article').appendChild(d)}});
+})();
+
+(function(){
+const oldDraw=v41Draw;
+v41Draw=function(slot){try{oldDraw(slot)}catch(e){console.error(e);v41Stop();if(v41Session){v41Section=Math.min(Math.max(0,v41Session.section||0),(songs[v41Session.songIndex].sections||[1]).length-1);v41Bar=0;v41Slot=0;v41Chord='';try{oldDraw(0)}catch(e2){}v41('v41Cue').textContent='הנגן אופס. לחץ נגן שוב'}}};
+const oldStart=v41Start;
+v41Start=function(){if(!v41Playing&&v41Session&&v41Session.kind==='song'&&!v41Session.exercise){let secs=songs[v41Session.songIndex].sections||[1],cue=v41('v41Cue').textContent||'',last=v41Section>=secs.length-1&&v41Bar>=(secs[Math.min(v41Section,secs.length-1)].bars||[1]).length-1;if(v41Section>=secs.length||v41Section<0||(last&&cue.includes('הושלמ'))){v41Section=Math.min(Math.max(0,v41Session.section||0),secs.length-1);v41Bar=0;v41Slot=0;v41Chord='';v41('v41Cue').textContent=''}}oldStart()};
+v41('v41Play').onclick=v41Start;
 })();
 </script>
 </body></html>
