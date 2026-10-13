@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>המאמן של מיקי ♫</title>
-<meta name="app-version" content="3.4-2026-09-27">
+<meta name="app-version" content="4.8-2026-10-13">
 <meta name="theme-color" content="#07111f">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2454,6 +2454,77 @@ const v46DrawOld=v41Draw;v41Draw=function(s){v46DrawOld(s);v46Sync()};
  function draw(){const p=ensureToday();const fb=document.getElementById('v47Finish');fb.hidden=!!p.review;const left=unfinished().length;document.getElementById('v47Path').textContent=left?('המסלול: '+doneList().length+' מתוך '+P.length+' צעדים. "תן אימון אחר" נותן צעד אחר או חזרה להיום.'):'המסלול הושלם. "תן אימון אחר" מחליף את החזרה של היום.'}
  renderAdaptive=(function(o){return function(){o();const pv=buildDailyPlan(nextDayKey(),true);tomorrowPreview.innerHTML='<ul class="tomorrow-list">'+pv.items.map(x=>`<li><b>${x.kind}:</b> ${x.title}</li>`).join('')+'</ul>'}})(renderAdaptive);
  renderSteps();
+})();
+</script>
+<style id="gcLyricsCss">
+#gcView,#gcEdit{margin:8px 0;border:1px solid #2f4a63;border-radius:12px;padding:6px 12px;background:rgba(255,255,255,.04)}
+#gcView summary,#gcEdit summary{cursor:pointer;font-weight:700;padding:6px 0}
+#gcView .gc-row{display:flex;flex-wrap:wrap;gap:8px 14px;margin:8px 0}
+#gcView label{display:inline-flex;align-items:center;gap:6px}
+#gcView .gc-presets{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+#gcView .gc-presets button,#gcEdit button{padding:6px 12px;border-radius:10px;border:1px solid #4b6a85;background:transparent;color:inherit;font:inherit;cursor:pointer}
+#gcEdit textarea{width:100%;min-height:110px;box-sizing:border-box;border-radius:10px;padding:8px;font:inherit;background:#0e1b2a;color:inherit;border:1px solid #4b6a85}
+#gcEdit .gc-note{font-size:.85em;opacity:.8;margin:6px 0}
+#gcLyrics{margin:8px 0;padding:10px 14px;border-radius:14px;border:1px solid #2f4a63;text-align:center}
+#gcLyrics .gc-now{font-size:1.35em;font-weight:700;min-height:1.6em}
+#gcLyrics .gc-next{opacity:.65;margin-top:4px}
+#gcLyrics .gc-empty{opacity:.7;font-size:.95em}
+</style>
+<script>
+(function(){
+const LK='gc_lyrics_v1',VK='gc_view_v1';
+const J=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
+const defView={chords:true,next:true,diag:true,strum:true,lyrics:true,cue:false};
+const presets={beginner:{chords:true,next:true,diag:true,strum:true,lyrics:true,cue:false},mid:{chords:true,next:true,diag:false,strum:false,lyrics:true,cue:false},adv:{chords:true,next:false,diag:false,strum:false,lyrics:true,cue:false}};
+let view=Object.assign({},defView,J(VK,{}));
+const $=id=>document.getElementById(id);
+const ov=$('v41Overlay');
+const settings=ov.querySelector('.v41-settings');
+const view_el=document.createElement('details');view_el.id='gcView';
+view_el.innerHTML='<summary>מה להציג · לפי הרמה שלי</summary><div class="gc-presets"><button type="button" data-p="beginner">מתחיל · הכל</button><button type="button" data-p="mid">בינוני · בלי דיאגרמה ובס</button><button type="button" data-p="adv">מתקדם · אקורדים ומילים</button></div><div class="gc-row"><label><input type="checkbox" data-k="chords"> רצועת אקורדים</label><label><input type="checkbox" data-k="next"> האקורד הבא</label><label><input type="checkbox" data-k="diag"> דיאגרמת אקורד</label><label><input type="checkbox" data-k="strum"> פריטה ובס</label><label><input type="checkbox" data-k="lyrics"> מילים</label><label><input type="checkbox" data-k="cue"> מילים כרמז בלבד (מילה ראשונה)</label></div><div class="gc-note" style="font-size:.85em;opacity:.8">הבחירה נשמרת במכשיר הזה.</div>';
+settings.after(view_el);
+const lyr=document.createElement('div');lyr.id='gcLyrics';lyr.setAttribute('aria-live','polite');
+$('v41Markers').after(lyr);
+const ed=document.createElement('details');ed.id='gcEdit';
+ed.innerHTML='<summary>✎ מילים לחלק הזה</summary><div class="gc-note" id="gcEditSec"></div><textarea id="gcTxt" dir="rtl" placeholder="הדבק כאן מילים. שורה אחת לכל תיבת אקורד. שורה ריקה = תיבה בלי מילים."></textarea><div class="gc-row" style="display:flex;gap:8px;margin-top:6px"><button type="button" id="gcSave">שמור</button><button type="button" id="gcClear">מחק מילים של החלק</button></div><div class="gc-note">המילים שומרות רק במכשיר הזה (לא באתר ולא בשרת). האפליקציה לא כוללת מילים של שירים. הדבק מילים שיש לך רשות להשתמש בהן. אם יש פחות או יותר שורות מתיבות, השורות מתפזרות לאורך החלק.</div>';
+lyr.after(ed);
+function save(){localStorage.setItem(VK,JSON.stringify(view))}
+function apply(){
+ view_el.querySelectorAll('input[data-k]').forEach(i=>i.checked=!!view[i.dataset.k]);
+ $('v41Markers').style.display=view.chords?'':'none';
+ const now=ov.querySelector('.v41-now');if(now)now.style.display=view.next?'':'none';
+ const f=ov.querySelector('.v41-fingering'),r=ov.querySelector('.v41-right'),pn=ov.querySelector('.v41-panels');
+ if(f)f.style.display=view.diag?'':'none';if(r)r.style.display=view.strum?'':'none';
+ if(pn)pn.style.display=(view.diag||view.strum)?'':'none';
+ $('v41Slots').style.display=view.strum?'':'none';$('v41Guide').style.display=view.strum?'':'none';$('v41Warning').style.display=view.strum?'':'none';
+ lyr.style.display=view.lyrics?'':'none';
+ draw();
+}
+view_el.addEventListener('change',e=>{let k=e.target.dataset.k;if(!k)return;view[k]=e.target.checked;save();apply()});
+view_el.addEventListener('click',e=>{let p=e.target.dataset&&e.target.dataset.p;if(!p)return;view=Object.assign({},presets[p]);save();apply()});
+function ctx(){if(typeof v41Session==='undefined'||!v41Session)return null;let b=v41Bars();return {title:songs[v41Session.songIndex].title,sec:v41Session.kind==='drill'?'':(b.secs[v41Section]||{}).name||'',bars:b.bars}}
+function lines(c){let all=J(LK,{});let t=((all[c.title]||{})[c.sec])||'';return t.split(/\r?\n/).map(x=>x.trim())}
+function lineFor(ls,i,n){if(!ls.length||!ls.some(x=>x))return '';let idx=ls.length===n?i:Math.floor(i*ls.length/n);if(ls.length!==n&&Math.floor((i+1)*ls.length/n)===idx&&i>0&&Math.floor((i-1)*ls.length/n)===idx)return '';return ls[idx]||''}
+function draw(){
+ let c=ctx();if(!c||!view.lyrics)return;
+ let ls=lines(c),n=c.bars.length,i=v41Bar;
+ if(!ls.some(x=>x)){lyr.innerHTML='<div class="gc-empty">עוד אין מילים לחלק הזה. פתח "✎ מילים לחלק הזה" והדבק.</div>';return}
+ let cur=lineFor(ls,i,n),nx=lineFor(ls,(i+1)%n,n);
+ let show=s=>view.cue&&s?s.split(/\s+/)[0]+' …':s;
+ lyr.innerHTML='';
+ let a=document.createElement('div');a.className='gc-now';a.textContent=show(cur)||'·';
+ let b=document.createElement('div');b.className='gc-next';b.textContent=nx?'הבא: '+show(nx):'';
+ lyr.append(a,b);
+}
+function loadEd(){let c=ctx();if(!c)return;$('gcEditSec').textContent='שיר: '+c.title+(c.sec?' · חלק: '+c.sec:'')+' · '+c.bars.length+' תיבות';let all=J(LK,{});$('gcTxt').value=((all[c.title]||{})[c.sec])||''}
+let lastKey='';
+const od=window.v41Draw;
+window.v41Draw=function(s){od(s);let c=ctx();if(!c)return;let k=c.title+'|'+c.sec;if(k!==lastKey){lastKey=k;if(!ed.open||!$('gcTxt').matches(':focus'))loadEd()}draw()};
+ed.addEventListener('toggle',()=>{if(ed.open)loadEd()});
+$('gcSave').onclick=()=>{let c=ctx();if(!c)return;let all=J(LK,{});all[c.title]=all[c.title]||{};let t=$('gcTxt').value.trim();if(t)all[c.title][c.sec]=t;else delete all[c.title][c.sec];localStorage.setItem(LK,JSON.stringify(all));draw();$('gcSave').textContent='נשמר ✓';setTimeout(()=>$('gcSave').textContent='שמור',1200)};
+$('gcClear').onclick=()=>{let c=ctx();if(!c)return;if(!confirm('למחוק את המילים של החלק הזה?'))return;let all=J(LK,{});if(all[c.title])delete all[c.title][c.sec];localStorage.setItem(LK,JSON.stringify(all));$('gcTxt').value='';draw()};
+const oo=window.v41Open;
+window.v41Open=function(k){oo(k);lastKey='';apply();loadEd();ed.style.display=((typeof v41Session!=='undefined'&&v41Session&&v41Session.kind==='drill'))?'none':'';if((typeof v41Session!=='undefined'&&v41Session&&v41Session.kind==='drill'))lyr.style.display='none'};
 })();
 </script>
 </body></html>
