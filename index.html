@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>המאמן של מיקי ♫</title>
-<meta name="app-version" content="4.8-2026-10-14">
+<meta name="app-version" content="4.9-2026-10-17">
 <meta name="theme-color" content="#07111f">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -109,7 +109,7 @@ details.aug-insight summary:focus-visible{outline:3px solid var(--accent2);outli
 </head>
 <body>
 <div class="app">
-<header class="hero"><div class="brand"><h1>המאמן של מיקי ♫ <span class="pill" style="vertical-align:middle">v4.6</span></h1><p>15 דקות ביום. קודם קצב יציב, אחר כך מהירות.</p></div><div class="streak" id="streak">רצף · יום 1</div></header>
+<header class="hero"><div class="brand"><h1>המאמן של מיקי ♫ <span class="pill" style="vertical-align:middle">v4.9</span></h1><p>15 דקות ביום. קודם קצב יציב, אחר כך מהירות.</p></div><div class="streak" id="streak">רצף · יום 1</div></header>
 
 <section class="wake-card" id="wakeCard" aria-labelledby="wakeLabel">
   <div class="wake-copy"><span class="wake-icon" aria-hidden="true">☀️</span><div><b id="wakeLabel">השארת מסך דולק</b><span class="wake-status" id="wakeStatus" aria-live="polite">מופעל - המסך יישאר דולק בזמן התרגול</span></div></div>
@@ -178,6 +178,10 @@ const chords={
  A:{name:'לה מז׳ור',level:'ראשון',frets:[-1,0,2,2,2,0],fingers:['','','1','2','3',''],tip:'צופף שלוש אצבעות בסריג השני. אפשר גם בסדר 2-1-3 אם זה נוח יותר.'},
  E:{name:'מי מז׳ור',level:'ראשון',frets:[0,2,2,1,0,0],fingers:['','2','3','1','',''],tip:'האצבע הראשונה בסריג 1. בדוק שהמיתרים הדקים פתוחים ונקיים.'},
  Em:{name:'מי מינור',level:'ראשון',frets:[0,2,2,0,0,0],fingers:['','2','3','','',''],tip:'רק שתי אצבעות. נגן אותן עם 2-3: כך הן נשארות במקום גם במעבר ל-E וגם במעבר ל-Am.'},
+ Em7:{name:'מי מינור 7',level:'הבא',frets:[0,2,2,0,3,0],fingers:['','2','3','','4',''],tip:'כמו Em רגיל, רק מוסיפים אצבע 4 על מיתר 2 בסריג 3. אצבעות 2 ו-3 נשארות במקום.'},
+ Em6:{name:'מי מינור 6',level:'הבא',frets:[0,2,2,0,2,0],fingers:['','2','3','','4',''],tip:'כמו Em, ואצבע 4 נוחתת על מיתר 2 בסריג 2. רק אצבע אחת זזה מ-Em.'},
+ "Em5+":{name:'מי מינור 5+',level:'הבא',frets:[0,2,2,0,1,0],fingers:['','2','3','','1',''],tip:'כמו Em, ואצבע 1 על מיתר 2 בסריג 1. ביחד עם Em7 ו-Em6 זו "הליכת ה-Em" של דוד ושאול.'},
+ B7:{name:'סי 7',level:'הרחבה',frets:[-1,2,1,2,0,2],fingers:['','2','1','3','','4'],tip:'ארבע אצבעות בלי בארה; מיתר 6 לא נפרט. בונים לאט אצבע־אצבע: קודם 2, אחריה 1, אחריה 3 ובסוף 4.'},
  G:{name:'סול מז׳ור',level:'הבא',frets:[3,2,0,0,0,3],fingers:['2','1','','','','3'],tip:'שמור את אצבע 3 קרובה למיתר הראשון. בהתחלה מותר לבנות את הצורה לאט.'},
  C:{name:'דו מז׳ור',level:'הבא',frets:[-1,3,2,0,1,0],fingers:['','3','2','','1',''],tip:'אל תפרוט את המיתר השישי. קרב את האצבעות למתכת הסריג בלי לעלות עליה.'},
  Am:{name:'לה מינור',level:'הבא',frets:[-1,0,2,2,1,0],fingers:['','','2','3','1',''],tip:'דומה מאוד ל-E, רק מזיזים את הצורה קבוצה אחת כלפי מטה.'},
@@ -463,17 +467,21 @@ const songs=[
   "artist": "אהוד בנאי",
   "ch": [
    "Em",
+   "Em7",
+   "Em6",
+   "Em5+",
    "Am",
    "A",
+   "B7",
    "C",
    "G"
   ],
   "level": "קל–בינוני",
-  "goal": "להחזיק Em יציב ואז לחבר את החלק המחבר Am → Em ואת הסוף Em → C → A → G",
-  "why": "מתחילים בבית שכולו Em; כשנוח, מוסיפים את החלק המחבר והסוף. אין צורך לנגן את קו המלודיה.",
+  "goal": "קודם 'הליכת ה-Em': Em ← Em7 ← Em6 ← Em5+ — רק אצבע אחת זזה על מיתר 2 וכל השאר נשאר. אחר כך החלק הדרמטי עם B7, ולבסוף הרצף כולו.",
+  "why": "הבתים נשמעים כמו Em אחד ארוך, אבל תנועה של אצבע אחת (Em7, Em6, Em5+) נותנת להם את הצליל האמיתי של השיר. אין צורך לנגן את קו המלודיה של הפתיחה.",
   "sheet": true,
   "source": "https://www.tab4u.com/tabs/songs/284_%D7%90%D7%94%D7%95%D7%93_%D7%91%D7%A0%D7%90%D7%99_-_%D7%93%D7%95%D7%93_%D7%95%D7%A9%D7%90%D7%95%D7%9C.html",
-  "shift": "אותו מרכז טונאלי Em כמו בדף Tab4U (לא טרנספוזיציה), אך זה ליווי לימודי מפושט ולא העיבוד המקורי: Em5+/Em6/Em7 הוחלפו ב־Em, ‏G6 ב־G, ‏Aadd9 ב־A, ‏Am/C ב־Am ו־B7 הושמט. התיבות הן תרגול של 4 פעימות כל אחת, לא תזמון מדויק של ההקלטה; לא מתאים לנגינה מדויקת יחד עם המקור.",
+  "shift": "אותו מרכז טונאלי Em כמו בדף Tab4U (לא טרנספוזיציה), וסדר החלקים כמו בשיר. זה עדיין עיבוד לימודי ולא העיבוד המקורי: G6 הוחלף ב־G, Aadd9 ב־A ו־Am/C ב־Am. Em7, Em6 ו־Em5+ נשארו כמו במקור (צורות של אצבע אחת על בסיס Em) ו־B7 הוחזר לחלק הדרמטי ולקריאה. כל משבצת היא תיבת אימון של 4 פעימות, לא תזמון מדויק של ההקלטה, והלולאות קוצרו ל־x2 (במקור x4–x5). לא מתאים לנגינה יחד עם המקור.",
   "sections": [
    {
     "name": "התחלה מפושטת",
@@ -491,36 +499,77 @@ const songs=[
    {
     "name": "חלק · שעת לילה",
     "bars": [
+     "Em7",
      "Em",
      "Em",
+     "Em5+",
+     "Em6",
+     "Em7",
      "Em",
      "Em",
+     "Em5+",
+     "Em6",
+     "Em7",
      "Em",
      "Em",
+     "Em5+",
+     "Em6",
+     "Em6",
+     "Em7",
      "Em",
-     "Em"
+     "Em",
+     "Em5+"
     ]
    },
    {
-    "name": "מעבר Em",
+    "name": "מעבר · הליכת Em",
     "bars": [
      "Em",
+     "Em7",
+     "Em6",
+     "Em5+",
      "Em",
-     "Em",
-     "Em"
+     "Em7",
+     "Em6",
+     "Em5+"
     ]
    },
    {
     "name": "חלק · דוד מנגן",
     "bars": [
      "Em",
+     "Em5+",
+     "Em6",
+     "Em7",
+     "Em",
+     "Em7",
      "Em",
      "Em",
+     "Em5+",
+     "Em6",
+     "Em7",
      "Em",
      "Em",
+     "Em5+",
+     "Em6",
+     "Em7",
      "Em",
      "Em",
-     "Em"
+     "Em5+",
+     "Em6"
+    ]
+   },
+   {
+    "name": "מעבר כמו ההתחלה",
+    "bars": [
+     "Em",
+     "G",
+     "A",
+     "C",
+     "Em",
+     "G",
+     "A",
+     "C"
     ]
    },
    {
@@ -535,18 +584,37 @@ const songs=[
      "Em",
      "Am",
      "Am",
+     "B7",
+     "Am",
      "Em"
+    ]
+   },
+   {
+    "name": "מעבר כמו ההתחלה 2",
+    "bars": [
+     "Em",
+     "G",
+     "A",
+     "C",
+     "Em",
+     "G",
+     "A",
+     "C"
     ]
    },
    {
     "name": "חלק · דוד מתחמק",
     "bars": [
+     "Em6",
+     "Em7",
      "Em",
      "Em",
-     "Em",
+     "Em5+",
+     "Em6",
+     "Em7",
      "Em",
      "Am",
-     "Em"
+     "Em5+"
     ]
    },
    {
@@ -556,7 +624,34 @@ const songs=[
      "Am",
      "Am",
      "Em",
+     "B7",
      "Am"
+    ]
+   },
+   {
+    "name": "מעבר כמו ההתחלה 3",
+    "bars": [
+     "Em",
+     "G",
+     "A",
+     "C",
+     "Em",
+     "G",
+     "A",
+     "C"
+    ]
+   },
+   {
+    "name": "מעבר · לפני הסוף",
+    "bars": [
+     "Em7",
+     "Em",
+     "Em",
+     "A",
+     "Em7",
+     "Em",
+     "Em",
+     "A"
     ]
    },
    {
@@ -567,6 +662,7 @@ const songs=[
      "A",
      "G",
      "Em",
+     "Em",
      "C",
      "A",
      "G",
@@ -574,8 +670,12 @@ const songs=[
     ]
    },
    {
-    "name": "סוף מפושט",
+    "name": "סוף",
     "bars": [
+     "Em",
+     "G",
+     "A",
+     "C",
      "Em",
      "G",
      "A",
