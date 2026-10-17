@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>המאמן של מיקי ♫</title>
-<meta name="app-version" content="4.9-2026-10-17">
+<meta name="app-version" content="4.10-2026-10-17">
 <meta name="theme-color" content="#07111f">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -109,7 +109,7 @@ details.aug-insight summary:focus-visible{outline:3px solid var(--accent2);outli
 </head>
 <body>
 <div class="app">
-<header class="hero"><div class="brand"><h1>המאמן של מיקי ♫ <span class="pill" style="vertical-align:middle">v4.9</span></h1><p>15 דקות ביום. קודם קצב יציב, אחר כך מהירות.</p></div><div class="streak" id="streak">רצף · יום 1</div></header>
+<header class="hero"><div class="brand"><h1>המאמן של מיקי ♫ <span class="pill" style="vertical-align:middle">v4.10</span></h1><p>15 דקות ביום. קודם קצב יציב, אחר כך מהירות.</p></div><div class="streak" id="streak">רצף · יום 1</div></header>
 
 <section class="wake-card" id="wakeCard" aria-labelledby="wakeLabel">
   <div class="wake-copy"><span class="wake-icon" aria-hidden="true">☀️</span><div><b id="wakeLabel">השארת מסך דולק</b><span class="wake-status" id="wakeStatus" aria-live="polite">מופעל - המסך יישאר דולק בזמן התרגול</span></div></div>
@@ -2692,5 +2692,85 @@ function cbSetup(){try{const card=v3('v3BackupStatus').parentElement,row=documen
 cbSetup();cbBackup(false,true)
 
 </script>
+<script>
+/* v4.10 · דוד ושאול — מנגינת הפתיחה מ-Tab4U + דפוס פריטה מוצע לפתיחה ולסוף */
+(function(){
+const V410_TITLE='דוד ושאול';
+const V410_PA=[{f:6,to:7},{f:7},{f:7},{f:7},{f:7},{f:5},{f:7},{f:5},{f:7},{r:1},{f:7},{f:7},{f:7},{f:7},{f:5}];
+const V410_PB=[{f:7},{f:5},{f:7},{f:7},{f:7},{f:7},{f:7},{f:5},{f:7},{f:5},{f:8},{f:8},{f:7},{f:5},{f:8},{f:7}];
+const st410=document.createElement('style');
+st410.textContent='.v410-guide h3{margin:14px 0 6px}.v410-notes{display:flex;flex-wrap:wrap;gap:4px;direction:ltr;margin:6px 0 10px}.v410-note{min-width:32px;text-align:center;border:1px solid var(--line);border-radius:8px;padding:8px 3px;font-size:.95rem;background:#0b192a;color:var(--text)}.v410-note.rest{color:var(--muted);background:transparent}.v410-note.slide{border-color:var(--accent2)}.v410-note.active{background:#214939;border-color:var(--accent);color:var(--accent)}.v410-over{margin:10px 0 2px;font-weight:800;color:var(--accent2)}';
+document.head.append(st410);
+const card=document.createElement('article');
+card.className='card v410-guide';
+card.innerHTML='<h2>התחלה וסוף · מה קורה בהקלטה</h2>'
++'<p class="v3-note">בהקלטה השיר נפתח במנגינה שקטה על מיתר 1 (הדק ביותר) מעל האקורדים, ומסתיים כשלולאת Em–G–A–C מאטה ועוצרת על Em אחד. את תווי המנגינה לקחנו מהטאב של Tab4U. את הפריטה המדויקת של ההקלטה אי אפשר לוודא מאתרי האקורדים, ולכן דפוס הפריטה למטה הוא הצעה שלנו - ומסומן ככזה.</p>'
++'<h3>1 · מנגינת הפתיחה (מיתר 1)</h3>'
++'<p>אצבע לכל סריג: 5 = אצבע 1, 6 = אצבע 2, 7 = אצבע 3, 8 = אצבע 4. הסימן → הוא גלילה: האצבע נשארת על המיתר ומחליקה מסריג 6 לסריג 7. נקודה היא הפסקה קצרה.</p>'
++'<p class="v410-over">ביט א׳ · מעל Em ואז G</p><div class="v410-notes" id="v410NotesA"></div><button class="secondary" id="v410PlayA">▶ שמע את ביט א׳</button>'
++'<p class="v410-over">ביט ב׳ · מעל A, C ו-Em</p><div class="v410-notes" id="v410NotesB"></div><button class="secondary" id="v410PlayB">▶ שמע את ביט ב׳</button>'
++'<p class="v3-note">הניגון כאן במרווחים שווים, כדי ללמוד את סדר הצלילים - זה לא תזמון ההקלטה. קודם בלי מטרונום, צליל אחד בכל פעם. אותה מנגינה חוזרת גם במעברים בין חלקי השיר.</p>'
++'<h3>2 · דפוס פריטה מוצע לפתיחה ולסוף (עיבוד שלנו, לא מההקלטה)</h3>'
++'<p>פירוק 4/4: אגודל על הבס, ואז מיתרים 3-2-1, שמיניות שוות. הבס לכל אקורד: Em מיתר 6 · G מיתר 6 · A מיתר 5 · C מיתר 5.</p>'
++'<ol style="margin:6px 0;padding-inline-start:20px;line-height:1.7"><li>בחר חלק "התחלה מפושטת", ובשורת הדפוסים למעלה "7 · פירוק 4/4". קצב 40-45.</li>'
++'<li>נגן את הלולאה Em–G–A–C פעמיים בלי עצירה. זו הפריטה שמתאימה לאווירת הפתיחה והמעברים.</li>'
++'<li>עבור לחלק "סוף": אותה לולאה, לקראת הסוף האט מעט, וב-Em האחרון פרוט פעם אחת ותן לצליל לצלצל.</li></ol>'
++'<p class="privacy-note">מבנה הסיום (Em–G–A–C חוזר ונעצר על Em) מתוך <a href="https://www.tab4u.com/tabs/songs/284_%D7%90%D7%94%D7%95%D7%93_%D7%91%D7%A0%D7%90%D7%99_-_%D7%93%D7%95%D7%93_%D7%95%D7%A9%D7%90%D7%95%D7%9C.html" target="_blank" rel="noopener noreferrer">הטאב של Tab4U ↗</a>. גרסת לימוד לתרגול בלבד; לא תמלול מדויק של ההקלטה ולא לנגינה עם המקור.</p>';
+v3('v3SongSections').before(card);
+function chipHTML(n){
+ if(n.r)return '<span class="v410-note rest">·</span>';
+ if(n.to)return '<span class="v410-note slide">'+n.f+'→'+n.to+'</span>';
+ return '<span class="v410-note">'+n.f+'</span>';
+}
+document.getElementById('v410NotesA').innerHTML=V410_PA.map(chipHTML).join('');
+document.getElementById('v410NotesB').innerHTML=V410_PB.map(chipHTML).join('');
+const V410={playing:false,timer:null};
+let v410Var=0;
+function v410Note(ctx,string,fret,when,gain){
+ const bus=v46Bus(ctx),vol=Math.max(0,Math.min(1,(v46s.vol||80)/100));
+ bus.master.gain.value=vol*0.8;bus.low.gain.value=vol;
+ const src=ctx.createBufferSource(),g=ctx.createGain();
+ src.buffer=v46Buf(ctx,v46Freq(string,fret),(++v410Var)&1);
+ g.gain.value=gain;src.connect(g);g.connect(bus.master);
+ src.start(when);src.stop(when+V46_DUR);
+}
+function v410Stop(){
+ V410.playing=false;clearTimeout(V410.timer);
+ document.getElementById('v410PlayA').textContent='▶ שמע את ביט א׳';
+ document.getElementById('v410PlayB').textContent='▶ שמע את ביט ב׳';
+ document.querySelectorAll('.v410-note.active').forEach(e=>e.classList.remove('active'));
+}
+function v410Play(notes,elId,btn){
+ if(V410.playing){v410Stop();return}
+ v40StopMic();v40StopOutput();
+ const ctx=v46Ctx();if(!ctx)return;
+ V410.playing=true;btn.textContent='■ עצור';
+ const ms=30000/+v3('v3SongSpeed').value,chips=document.getElementById(elId).querySelectorAll('.v410-note');
+ let i=0;
+ const step=()=>{
+  if(!V410.playing)return;
+  if(i>=notes.length){v410Stop();return}
+  chips.forEach((e,j)=>e.classList.toggle('active',i===j));
+  const n=notes[i],when=ctx.currentTime+0.06;
+  if(!n.r){
+   if(n.to){v410Note(ctx,1,n.f,when,.55);v410Note(ctx,1,n.to,when+ms/2000,.55)}
+   else v410Note(ctx,1,n.f,when,.55);
+  }
+  i++;V410.timer=setTimeout(step,ms);
+ };
+ step();
+}
+document.getElementById('v410PlayA').onclick=()=>v410Play(V410_PA,'v410NotesA',document.getElementById('v410PlayA'));
+document.getElementById('v410PlayB').onclick=()=>v410Play(V410_PB,'v410NotesB',document.getElementById('v410PlayB'));
+const s410=songs.find(s=>s.title===V410_TITLE);
+if(s410)s410.why=s410.why.replace('אין צורך לנגן את קו המלודיה של הפתיחה.','מנגינת הפתיחה של ההקלטה (מיתר 1) ודפוס פריטה מוצע לפתיחה ולסוף מחכים בכרטיס "התחלה וסוף" בדף השיר.');
+const v410OldRender=v3SongRender;
+v3SongRender=function(){v410OldRender();const is=songs[+v3('v3Song').value].title===V410_TITLE;card.hidden=!is;if(!is)v410Stop()};
+v3SongRender();
+if(typeof renderSongs==='function')renderSongs();
+})();
+</script>
+
 </body></html>
 <!-- v4.7 -->
+
