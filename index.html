@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>המאמן של מיקי ♫</title>
-<meta name="app-version" content="4.10-2026-10-17">
+<meta name="app-version" content="4.11-2026-10-17">
 <meta name="theme-color" content="#07111f">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -109,7 +109,7 @@ details.aug-insight summary:focus-visible{outline:3px solid var(--accent2);outli
 </head>
 <body>
 <div class="app">
-<header class="hero"><div class="brand"><h1>המאמן של מיקי ♫ <span class="pill" style="vertical-align:middle">v4.10</span></h1><p>15 דקות ביום. קודם קצב יציב, אחר כך מהירות.</p></div><div class="streak" id="streak">רצף · יום 1</div></header>
+<header class="hero"><div class="brand"><h1>המאמן של מיקי ♫ <span class="pill" style="vertical-align:middle">v4.11</span></h1><p>15 דקות ביום. קודם קצב יציב, אחר כך מהירות.</p></div><div class="streak" id="streak">רצף · יום 1</div></header>
 
 <section class="wake-card" id="wakeCard" aria-labelledby="wakeLabel">
   <div class="wake-copy"><span class="wake-icon" aria-hidden="true">☀️</span><div><b id="wakeLabel">השארת מסך דולק</b><span class="wake-status" id="wakeStatus" aria-live="polite">מופעל - המסך יישאר דולק בזמן התרגול</span></div></div>
@@ -2559,6 +2559,44 @@ const v46DrawOld=v41Draw;v41Draw=function(s){v46DrawOld(s);v46Sync()};
   {id:'cn3',g:'מחברים',t:'חיבור · חלק 5 ואז חלק 6',d:'6 דקות · מהחלק השקט עד הסוף החזק',st:3,sec:4},
   {id:'fu1',g:'כל השיר',t:'כל השיר · לאט, ברצף',d:'8 דקות · כל 56 התיבות בלי לעצור. אם טעית, המשך עם הספירה',st:3,sec:0},
   {id:'fu2',g:'כל השיר',t:'כל השיר · עם הגיטרה המדגימה',d:'8 דקות · לחץ "שמע איך זה נשמע", הקשב, ואז נגן יחד איתה. הגיטרה היא עיבוד מסונתז, לא ההקלטה המקורית',st:3,sec:0}
+ ,
+ {
+  "title": "Knockin' on Heaven's Door",
+  "artist": "בוב דילן",
+  "ch": [
+   "G",
+   "D",
+   "Am",
+   "C"
+  ],
+  "level": "קל מאוד",
+  "goal": "שני משפטים שחוזרים כל השיר: G D Am ואז G D C. אותה יד ימין מההתחלה עד הסוף, בלי הפתעות.",
+  "why": "שיר שמזהים מגיטרה בלבד: ארבעה אקורדים פתוחים שכבר באפליקציה, ליווי אחד חוזר בקצב רגוע (במקור בערך 68 BPM).",
+  "sheet": true,
+  "source": "https://www.fender.com/articles/chords/learn-to-play-knockin-on-heavens-door",
+  "shift": "עיבוד תרגול באותה טונאליות G של המקור (לא הוזז). ה-Am7 של ההקלטה פושט ל-Am רגיל. כל משבצת היא תיבת אימון של 4 פעימות; לא תזמון מדויק של ההקלטה. מקור נוסף: שיעור songnotes.net (lessons/88).",
+  "sections": [
+   {
+    "name": "משפט 1 · G D Am",
+    "bars": [
+     "G",
+     "D",
+     "Am",
+     "Am"
+    ]
+   },
+   {
+    "name": "משפט 2 · G D C",
+    "bars": [
+     "G",
+     "D",
+     "C",
+     "C"
+    ]
+   }
+  ]
+ }
+
  ];
  const byId=Object.fromEntries(P.map(x=>[x.id,x]));
  state.songPath=state.songPath&&Array.isArray(state.songPath.done)?state.songPath:{done:[]};
